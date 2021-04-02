@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" >
+<html lang="zh-CN">
+<!-- Begin Page Content -->
+<div class="container-fluid">
+
+    <!-- Page Heading -->
+    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+        <h1 class="h3 mb-0 text-gray-800">可用性报表 邮件规则</h1>
+    </div>
+
+
+    <!-- DataTales Example -->
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary">DataTables-20</h6>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table  class="table table-striped table-bordered" cellspacing="0" width="100%">
+                    <tr align=center>
+                        <th  align="right"   bgcolor=#ddddcc>规则ID</th>
+                        <th  align="right"   bgcolor=#ddddcc>规则名称</th>
+                        <th  align="right"   bgcolor=#ddddcc>负责人</th>
+                        <th  align="right"   bgcolor=#ddddcc>邮件收件人</th>
+                        <th  align="right"   bgcolor=#ddddcc>ES索引</th>
+                        <th  align="right"   bgcolor=#ddddcc>查看域名</th>
+                    </tr>
+                    <tr th:id="${rlue_name_item.rlue_id}"  th:each="rlue_name_item:${rlue_name}">
+                        <td align="right" th:text="${rlue_name_item.rlue_id}"></td>
+                        <td align="right" th:text="${rlue_name_item.rlue_name}"></td>
+                        <td align="right" th:text="${rlue_name_item.rlue_user}"></td>
+                        <td align="right" th:text="${rlue_name_item.rlue_group}"></td>
+                        <td align="right" th:text="${rlue_name_item.rlue_es_index}"></td>
+                        <td th:text="${rlue_name_item.rlue_id}==2?'默认不可编辑':'查看'"></td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- /.container-fluid -->

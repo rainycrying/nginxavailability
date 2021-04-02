@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" >
+<html lang="zh-CN">
+
+<script src="/static/js/jquery.min.js"></script>
+<link href="/static/css/bootstrap-datepicker3.css" rel="stylesheet">
+<script src="/static/js/bootstrap-datepicker.min.js"></script>
+<script src="/static/js/bootstrap-datepicker.zh-CN.min.js"></script>
+
+<!-- Begin Page Content -->
+<div class="container-fluid">
+
+    <!-- Page Heading -->
+    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+        <h1 class="h3 mb-0 text-gray-800">域名QPS查询</h1>
+    </div>
+
+    <div class="col-sm-12" style="width:100%;text-align:center">
+        <form name="DomainForm" th:action="@{/api/domain/history}" method="post">
+            <input id="DomainNameinput" name="DomainName" list="DomainName"  th:value="${Domain_Name}"/> <input type="button" value="清空域名" onclick="document.getElementById('DomainNameinput').value=''"/>
+            <datalist id="DomainName">
+                <option th:each="table_item:${DomainSearchTips}" th:value=" ${table_item.domain_name}"></option>
+            </datalist>查询粒度:
+            <input name="TimeType" type="radio" value="From_Daytime" checked/>天
+            <input name="TimeType" type="radio" value="From_Hours" checked/>小时
+            <p></p>
+            <label for="date_begin">开始时间</label>
+            <input readonly="readonly" id="date_begin" name="date_begin" type="text" th:value="${date_begin}"/>
+            <p></p>
+            <label for="date_end">结束时间</label>
+            <input readonly="readonly" id="date_end" name="date_end" type="text" th:value="${date_end}"/>
+            <button id="post-btn" name="post-btn" class="btn btn-default active btn-primary" type="submit">查询</button>
+            <div class="alert alert-success">
+                <p></p>
+                <strong>当前查询域名</strong>
+                <span th:text="'域名='+${Domain_Name}"></span>。
+                <p></p>
+                <strong>当前查询粒度</strong>
+                <span th:text="${TimeType}==From_Hours?'小时':'天'"></span>
+                <p></p>
+                <strong>当前查询时间!</strong>
+                <span th:text="''+${date_begin}+'==&gt;'+${date_end}"></span>。
+            </div>
+            <div class="mc-ui-geometry-x-line" style="width:100px;"></div>
+            <div id="uuid16c333f6-6131-4bc5-ab64-b94047a5b560" class="mc-ui-geometry-x-line" style="width:100px;"></div>
+        </form>
+
+        <script type="text/javascript">
+            function upperCase(x)
+            {
+                var y=document.getElementById(x).value
+                document.getElementById(x).value=y.toUpperCase()
+            }
+            $(document).ready(function () {
+                (function(){
+                    var insertOptions = function(data, id) {
+                        var result = new Array();
+                        $.each(data, function(i, item){
+                            result.push(item.short_name);
+                        });
+                        //alert(result.toString());
+                        console.log(result.toString());
+                        $('#search_kw').autocomplete({
+                            source: result
+                        });
+                    }
+
+                    $('#search_kw').keyup(function(){
+                        var right_id = "search_kw";
+                        var url = "http://.....";
+                        var skeyword = $("#search_kw").val();
+                        $.ajax({
+                            url: url,
+                            dataType: 'jsonp',
+                            jsonp: "callback",
+                            data: {"skeyword": skeyword},
+                            success: function (data) {
+                                insertOptions(data, right_id);
+                            }
+
+                        });
+                    });
+
+                })();
+            });
+        </script>
+
+        <script>
+
+            function DatePicker(beginSelector,endSelector){
+                // 仅选择日期
+                $(beginSelector).datepicker(
+                    {
+                        language:  "zh-CN",
+                        autoclose: true,
+                        startView: 0,
+                        format: "yyyy-mm-dd",
+                        clearBtn:true,
+                        todayBtn:false,
+                        endDate:new Date()
+                    }).on('changeDate', function(ev){
+                    if(ev.date){
+                        $(endSelector).datepicker('setStartDate', new Date(ev.date.valueOf()))
+                    }else{
+                        $(endSelector).datepicker('setStartDate',"2021-03-04");
+                    }
+                })
+
+                $(endSelector).datepicker(
+                    {
+                        language:  "zh-CN",
+                        autoclose: true,
+                        startView:0,
+                        format: "yyyy-mm-dd",
+                        clearBtn:true,
+                        todayBtn:false,
+                        startDate:"2021-03-04",
+                        endDate:new Date()
+                    }).on('changeDate', function(ev){
+                    if(ev.date){
+                        $(beginSelector).datepicker('setEndDate', new Date(ev.date.valueOf()))
+                    }else{
+                        $(beginSelector).datepicker('setEndDate',new Date());
+                    }
+
+                })
+            }
+            DatePicker("#date_begin","#date_end");
+        </script>
+    </div>
+
+
+
+    <div class="col-sm-12">
+        <!-- 引入 echarts.js -->
+        <script src="https://cdn.staticfile.org/echarts/4.3.0/echarts.min.js">
+        </script>
+        <style type="text/css">
+            .FGH { height:auto !important; height:344px; min-height:344px; }
+        </style>
+        <script src="/static/js/jquery.min.js"></script>
+        <HR style="FILTER: alpha(opacity=0,finishopacity=100,style=1)" width="80%" color=#987cb9 SIZE=3/>
+        <!-- 为ECharts准备一个具备大小（宽高）的Dom -->
+        <div id="main_line" class="FGH">
+        </div>
+        <script th:inline="javascript" type="text/javascript">
+            var myChart = echarts.init(document.getElementById('main_line'));
+            option = {
+                title: {
+                    text: '域名可用性区间图',
+                    subtext: '[[${Domain_Name}]]'
+                },
+                tooltip: {
+                    trigger: 'axis'
+                },
+                legend: {
+                    data: ['总请求', '5xx',"4xx","3xx","2xx"]
+                },
+                grid: {
+                    left: '3%',
+                    right: '4%',
+                    bottom: '3%',
+                    containLabel: true
+                },
+                toolbox: {
+                    show: true,
+                    feature: {
+                        dataZoom: {
+                            yAxisIndex: 'none'
+                        },
+                        dataView: {readOnly: false},
+                        magicType: {type: ['line', 'bar']},
+                        restore: {},
+                        saveAsImage: {}
+                    }
+                },
+                xAxis: {
+                    type: 'category',
+                    boundaryGap: false,
+                    data: [[${data_xAxis}]]
+                },
+                yAxis: {
+                    type: 'value',
+                    axisLabel: {
+                        formatter: '{value} '
+                    }
+                },
+                series: [
+                    {
+                        name: '总请求',
+                        type: 'line',
+                        color: '#33a3dc',
+                        data: [[${data_series_all}]],
+                        markPoint: {
+                            data: [
+                                {type: 'max', name: '总请求-最大值'},
+                                {type: 'min', name: '总请求-最小值'}
+                            ]
+                        },
+                        markLine: {
+                            data: [
+                                {type: 'average', name: '总请求-平均值'}
+                            ]
+                        }
+                    },
+                    {
+                        name: '5xx',
+                        type: 'line',
+                        color:'#d71345',
+                        data:[[${data_series_5XX}]]
+                        ,
+                        markPoint: {
+                            data: [
+                                {name: '周最低', value: -2, xAxis: 1, yAxis: -1.5}
+                            ]
+                        },
+                        markLine: {
+                            data: [
+                                {type: 'average', name: '5xx-平均值'},
+                                [{
+                                    symbol: 'none',
+                                    x: '90%',
+                                    yAxis: 'max'
+                                }, {
+                                    symbol: 'circle',
+                                    label: {
+                                        position: 'start',
+                                        formatter: '5xx-最大值'
+                                    },
+                                    type: 'max',
+                                    name: '5xx-最高点'
+                                }]
+                            ]
+                        }
+                    },
+                    {
+                        name: '4xx',
+                        type: 'line',
+                        color:'#999d9c',
+
+                        data:[[${data_series_4XX}]],
+                        markPoint: {
+                            data: [
+                                {name: '周最低', value: -2, xAxis: 1, yAxis: -1.5}
+                            ]
+                        },
+                        markLine: {
+                            data: [
+                                {type: 'average', name: '4xx-平均值'},
+                                [{
+                                    symbol: 'none',
+                                    x: '90%',
+                                    yAxis: 'max'
+                                }, {
+                                    symbol: 'circle',
+                                    label: {
+                                        position: 'start',
+                                        formatter: '4xx-最大值'
+                                    },
+                                    type: 'max',
+                                    name: '4xx-最高点'
+                                }]
+                            ]
+                        }
+                    }
+                    ,
+
+                    {
+                        name: '3xx',
+                        type: 'line',
+                        color:'#73C0DE',
+
+                        data:[[${data_series_3XX}]]
+                        ,
+                        markPoint: {
+                            data: [
+                                {name: '周最低', value: -2, xAxis: 1, yAxis: -1.5}
+                            ]
+                        },
+                        markLine: {
+                            data: [
+                                {type: 'average', name: '3xx-平均值'},
+                                [{
+                                    symbol: 'none',
+                                    x: '90%',
+                                    yAxis: 'max'
+                                }, {
+                                    symbol: 'circle',
+                                    label: {
+                                        position: 'start',
+                                        formatter: '3xx-最大值'
+                                    },
+                                    type: 'max',
+                                    name: '3xx-最高点'
+                                }]
+                            ]
+                        }
+                    }
+                    ,
+
+                    {
+                        name: '2xx',
+                        type: 'line',
+                        color:'#91CC75',
+
+                        data:[[${data_series_2XX}]]
+                        ,
+                        markPoint: {
+                            data: [
+                                {name: '周最低', value: -2, xAxis: 1, yAxis: -1.5}
+                            ]
+                        },
+                        markLine: {
+                            data: [
+                                {type: 'average', name: '2xx-平均值'},
+                                [{
+                                    symbol: 'none',
+                                    x: '90%',
+                                    yAxis: 'max'
+                                }, {
+                                    symbol: 'circle',
+                                    label: {
+                                        position: 'start',
+                                        formatter: '2xx-最大值'
+                                    },
+                                    type: 'max',
+                                    name: '2xx-最高点'
+                                }]
+                            ]
+                        }
+                    }
+                ]
+            };
+            myChart.setOption(option);
+        </script>
+        <HR style="FILTER: alpha(opacity=0,finishopacity=100,style=1)" width="80%" color=#987cb9 SIZE=3/>
+
+
+
+        <!-- 为ECharts准备一个具备大小（宽高）的Dom -->
+        <div id="main_line_pile" class="FGH">
+        </div>
+        <script th:inline="javascript" type="text/javascript">
+            var myChart = echarts.init(document.getElementById('main_line_pile'));
+            option = {
+                title: {
+                    text: '域名QPS堆叠图'
+                },
+                tooltip: {
+                    trigger: 'axis'
+                },
+                legend: {
+                    data: ['总请求', '5XX', '4XX', '3XX', '2XX']
+                },
+                grid: {
+                    left: '3%',
+                    right: '4%',
+                    bottom: '3%',
+                    containLabel: true
+                },
+                toolbox: {
+                    feature: {
+                        saveAsImage: {}
+                    }
+                },
+                xAxis: {
+                    type: 'category',
+                    boundaryGap: false,
+                    data: [[${data_xAxis}]]
+                },
+                yAxis: {
+                    type: 'value'
+                },
+                series: [{
+                    name: '总请求',
+                    type: 'line',
+                    <!--        stack: '总量',-->
+                    data: [[${data_series_all}]]
+                }, {
+                    name: '5XX',
+                    type: 'line',
+                    stack: '总量',
+                    data: [[${data_series_5XX}]]
+                }, {
+                    name: '4XX',
+                    type: 'line',
+                    stack: '总量',
+                    data: [[${data_series_4XX}]]
+                }, {
+                    name: '3XX',
+                    type: 'line',
+                    stack: '总量',
+                    data: [[${data_series_3XX}]]
+                }, {
+                    name: '2XX',
+                    type: 'line',
+                    stack: '总量',
+                    data: [[${data_series_2XX}]]
+                }]
+            };
+            myChart.setOption(option);
+        </script>
+
+        <HR style="FILTER: alpha(opacity=0,finishopacity=100,style=1)" width="80%" color=#987cb9 SIZE=3/>
+
+
+        <HR style="FILTER: alpha(opacity=0,finishopacity=100,style=1)" width="80%" color=#987cb9 SIZE=3>
+
+    </div>
+
+</div>
+<!-- /.container-fluid -->
