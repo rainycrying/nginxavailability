@@ -1,16 +1,17 @@
 /*
-Navicat MySQL Data Transfer
+ Navicat MySQL Data Transfer
 
-Source Server         : wk_op_xxl_job
-Source Server Version : 50728
-Source Host           : 10.4.47.33:3306
-Source Database       : wk_op_xxl_job
+ Source Server         : AliYun
+ Source Server Type    : MySQL
+ Source Server Version : 50731
+ Source Host           : 10.8.0.1:3306
+ Source Schema         : wk_op_xxl_job
 
-Target Server Type    : MYSQL
-Target Server Version : 50728
-File Encoding         : 65001
+ Target Server Type    : MySQL
+ Target Server Version : 50731
+ File Encoding         : 65001
 
-Date: 2021-03-23 16:33:17
+ Date: 03/04/2021 15:27:29
 */
 
 SET FOREIGN_KEY_CHECKS=0;
