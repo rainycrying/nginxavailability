@@ -1,0 +1,175 @@
+<html xmlns:th="http://www.thymeleaf.org" >
+            <pre><b><font size=4>Site Reliability data report at <a th:text="${From_Daytime}"/>. <a href=http://kib.51y5.net>(Kibana Details.)</a> <a href=http://graf.51y5.net>(Grafana Dashboard.)</a></font></b></pre>
+<div>
+            <table border=1 cellspacing=0 cellpadding=4>
+            <th bgcolor=#ddddcc style="font-size: 20px" ><small style="font-size: smaller;">Domain Name</small></th>
+            <th bgcolor=#ddddcc><small>Reliability % </small></th>
+            <th bgcolor=#ddddcc><small>Total Throughput</small></th>
+            <th bgcolor=#ddddcc><small>Total Errors(502)</small></th>
+            <th bgcolor=#ddddcc><small>Total Errors(504)</small></th>
+            <th bgcolor=#ddddcc><small>Total Errors(500)</small></th>
+            <th bgcolor=#ddddcc><small>Total Errors(503)</small></th>
+            <th bgcolor=#ddddcc><small>Total Errors(408)</small></th>
+            <th bgcolor=#ddddcc><small>Total Errors(404)</small></th>
+            <th bgcolor=#ddddcc><small>Total Errors(400)</small></th>
+            <th bgcolor=#ddddcc><small>Total Errors(405)</small></th>
+            <th bgcolor=#ddddcc><small>Total Errors(403)</small></th>
+        <tr align=right th:each="table_item:${day_tables}">
+            <td  th:text="${table_item.Domain_Name}"></td>
+            <td  th:if=" ${table_item.Reliability} le '99.99' "   > <font color="#FF0000" th:text="${table_item.Reliability}+'%'"></font></td>
+            <td  th:if=" ${table_item.Reliability} gt '99.99' "   th:text="${table_item.Reliability}+'%'"></td>
+            <td  th:text="${table_item.Total_Throughput}"></td>
+            <td  th:text="${table_item.Total_Code_502}"></td>
+            <td  th:text="${table_item.Total_Code_504}"></td>
+            <td  th:text="${table_item.Total_Code_500}"></td>
+            <td  th:text="${table_item.Total_Code_503}"></td>
+            <td  th:text="${table_item.Total_Code_408}"></td>
+            <td  th:text="${table_item.Total_Code_404}"></td>
+            <td  th:text="${table_item.Total_Code_400}"></td>
+            <td  th:text="${table_item.Total_Code_405}"></td>
+            <td  th:text="${table_item.Total_Code_403}"></td>
+        </tr>
+    </table>
+</div>
+<div>
+    <a name=DETAILS></a>
+    <pre><b><font size=3>Total Throughput and 24hours' details at 2021/03/21.</font></b> (The MAX number in one line was marked in <font color=#FF0000><b>RED</b></font>.)</pre>
+    <table border=1 cellspacing=0 cellpadding=4 >
+        <tr align=center>
+            <th  align="right"   bgcolor=#ddddcc>Domain Name</th>
+            <th  align="right"   bgcolor=#ddddcc>Total Throughput</th>
+            <th  align="right"   bgcolor=#ddddcc>00:00</th>
+            <th  align="right"   bgcolor=#ddddcc>01:00</th>
+            <th  align="right"   bgcolor=#ddddcc>02:00</th>
+            <th  align="right"   bgcolor=#ddddcc>03:00</th>
+            <th  align="right"   bgcolor=#ddddcc>04:00</th>
+            <th  align="right"   bgcolor=#ddddcc>05:00</th>
+            <th  align="right"   bgcolor=#ddddcc>06:00</th>
+            <th  align="right"   bgcolor=#ddddcc>07:00</th>
+            <th  align="right"   bgcolor=#ddddcc>08:00</th>
+            <th  align="right"   bgcolor=#ddddcc>09:00</th>
+            <th  align="right"   bgcolor=#ddddcc>10:00</th>
+            <th  align="right"   bgcolor=#ddddcc>11:00</th>
+            <th  align="right"   bgcolor=#ddddcc>12:00</th>
+            <th  align="right"   bgcolor=#ddddcc>13:00</th>
+            <th  align="right"   bgcolor=#ddddcc>14:00</th>
+            <th  align="right"   bgcolor=#ddddcc>15:00</th>
+            <th  align="right"   bgcolor=#ddddcc>16:00</th>
+            <th  align="right"   bgcolor=#ddddcc>17:00</th>
+            <th  align="right"   bgcolor=#ddddcc>18:00</th>
+            <th  align="right"   bgcolor=#ddddcc>19:00</th>
+            <th  align="right"   bgcolor=#ddddcc>20:00</th>
+            <th  align="right"   bgcolor=#ddddcc>21:00</th>
+            <th  align="right"   bgcolor=#ddddcc>22:00</th>
+            <th  align="right"   bgcolor=#ddddcc>23:00</th>
+        </tr>
+        <tr th:id="${Hours_table_item.getDomain_Name}"  th:each="Hours_table_item:${Hours_tables}">
+            <!--                    <td><input  type="checkbox" class="check"></td>-->
+            <td align="right" th:text="${Hours_table_item.Domain_Name}"></td>
+            <td align="right" th:text="${Hours_table_item.Total_Throughput}"></td>
+            <td align="right" th:text="${Hours_table_item.Total_00Throughput}"></td>
+            <td align="right" th:text="${Hours_table_item.Total_01Throughput}"></td>
+            <td align="right" th:text="${Hours_table_item.Total_02Throughput}"></td>
+            <td align="right" th:text="${Hours_table_item.Total_03Throughput}"></td>
+            <td align="right" th:text="${Hours_table_item.Total_04Throughput}"></td>
+            <td align="right" th:text="${Hours_table_item.Total_05Throughput}"></td>
+            <td align="right" th:text="${Hours_table_item.Total_06Throughput}"></td>
+            <td align="right" th:text="${Hours_table_item.Total_07Throughput}"></td>
+            <td align="right" th:text="${Hours_table_item.Total_08Throughput}"></td>
+            <td align="right" th:text="${Hours_table_item.Total_09Throughput}"></td>
+            <td align="right" th:text="${Hours_table_item.Total_10Throughput}"></td>
+            <td align="right" th:text="${Hours_table_item.Total_11Throughput}"></td>
+            <td align="right" th:text="${Hours_table_item.Total_12Throughput}"></td>
+            <td align="right" th:text="${Hours_table_item.Total_13Throughput}"></td>
+            <td align="right" th:text="${Hours_table_item.Total_14Throughput}"></td>
+            <td align="right" th:text="${Hours_table_item.Total_15Throughput}"></td>
+            <td align="right" th:text="${Hours_table_item.Total_16Throughput}"></td>
+            <td align="right" th:text="${Hours_table_item.Total_17Throughput}"></td>
+            <td align="right" th:text="${Hours_table_item.Total_18Throughput}"></td>
+            <td align="right" th:text="${Hours_table_item.Total_19Throughput}"></td>
+            <td align="right" th:text="${Hours_table_item.Total_20Throughput}"></td>
+            <td align="right" th:text="${Hours_table_item.Total_21Throughput}"></td>
+            <td align="right" th:text="${Hours_table_item.Total_22Throughput}"></td>
+            <td align="right" th:text="${Hours_table_item.Total_23Throughput}"></td>
+    </table>
+
+
+
+</div>
+
+<div>
+    <a name=DETAILS></a>
+    <pre><b><font size=3>Total Errors and 24hours' details at 2021/03/23.</font></b> (The MAX number in one line was marked in <font color=#FF0000><b>RED</b></font>.)</pre>
+    <table border=1 cellspacing=0 cellpadding=4 width=2000>
+        <tr bgcolor=#ddddcc align=center>
+
+            <th>Domain Name</th>
+            <th bgcolor=#ddddcc>Total Errors</th>
+            <th bgcolor=#ddddcc>00:00</th>
+            <th bgcolor=#ddddcc>01:00</th>
+            <th bgcolor=#ddddcc>02:00</th>
+            <th bgcolor=#ddddcc>03:00</th>
+            <th bgcolor=#ddddcc>04:00</th>
+            <th bgcolor=#ddddcc>05:00</th>
+            <th bgcolor=#ddddcc>06:00</th>
+            <th bgcolor=#ddddcc>07:00</th>
+            <th bgcolor=#ddddcc>08:00</th>
+            <th bgcolor=#ddddcc>09:00</th>
+            <th bgcolor=#ddddcc>10:00</th>
+            <th bgcolor=#ddddcc>11:00</th>
+            <th bgcolor=#ddddcc>12:00</th>
+            <th bgcolor=#ddddcc>13:00</th>
+            <th bgcolor=#ddddcc>14:00</th>
+            <th bgcolor=#ddddcc>15:00</th>
+            <th bgcolor=#ddddcc>16:00</th>
+            <th bgcolor=#ddddcc>17:00</th>
+            <th bgcolor=#ddddcc>18:00</th>
+            <th bgcolor=#ddddcc>19:00</th>
+            <th bgcolor=#ddddcc>20:00</th>
+            <th bgcolor=#ddddcc>21:00</th>
+            <th bgcolor=#ddddcc>22:00</th>
+            <th bgcolor=#ddddcc>23:00</th>
+        </tr>
+        <tr align=right th:id="${Hours_Error_table_item.getDomain_Name}"  th:each="Hours_Error_table_item:${Hours_Error_tables}">
+            <!--                    <td><input  type="checkbox" class="check"></td>-->
+            <td align="right" th:text="${Hours_Error_table_item.Domain_Name}"></td>
+            <td align="right" th:text="${Hours_Error_table_item.Total_Throughput}"></td>
+            <td align="right" th:text="${Hours_Error_table_item.Total_00Throughput}"></td>
+            <td align="right" th:text="${Hours_Error_table_item.Total_01Throughput}"></td>
+            <td align="right" th:text="${Hours_Error_table_item.Total_02Throughput}"></td>
+            <td align="right" th:text="${Hours_Error_table_item.Total_03Throughput}"></td>
+            <td align="right" th:text="${Hours_Error_table_item.Total_04Throughput}"></td>
+            <td align="right" th:text="${Hours_Error_table_item.Total_05Throughput}"></td>
+            <td align="right" th:text="${Hours_Error_table_item.Total_06Throughput}"></td>
+            <td align="right" th:text="${Hours_Error_table_item.Total_07Throughput}"></td>
+            <td align="right" th:text="${Hours_Error_table_item.Total_08Throughput}"></td>
+            <td align="right" th:text="${Hours_Error_table_item.Total_09Throughput}"></td>
+            <td align="right" th:text="${Hours_Error_table_item.Total_10Throughput}"></td>
+            <td align="right" th:text="${Hours_Error_table_item.Total_11Throughput}"></td>
+            <td align="right" th:text="${Hours_Error_table_item.Total_12Throughput}"></td>
+            <td align="right" th:text="${Hours_Error_table_item.Total_13Throughput}"></td>
+            <td align="right" th:text="${Hours_Error_table_item.Total_14Throughput}"></td>
+            <td align="right" th:text="${Hours_Error_table_item.Total_15Throughput}"></td>
+            <td align="right" th:text="${Hours_Error_table_item.Total_16Throughput}"></td>
+            <td align="right" th:text="${Hours_Error_table_item.Total_17Throughput}"></td>
+            <td align="right" th:text="${Hours_Error_table_item.Total_18Throughput}"></td>
+            <td align="right" th:text="${Hours_Error_table_item.Total_19Throughput}"></td>
+            <td align="right" th:text="${Hours_Error_table_item.Total_20Throughput}"></td>
+            <td align="right" th:text="${Hours_Error_table_item.Total_21Throughput}"></td>
+            <td align="right" th:text="${Hours_Error_table_item.Total_22Throughput}"></td>
+            <td align="right" th:text="${Hours_Error_table_item.Total_23Throughput}"></td>
+    </table>
+
+</div>
+
+
+<footer>
+    <div class="modal-footer">
+        <div class="coinsTotalRow">
+            <font th:if=" ${HtmlCache} eq 'HtmlCache' "   >| Html Cache Redis |</font>
+            <font th:if=" ${HoursHtmlCache} eq 'HoursHtmlCache' "   >| HoursHtml Cache Redis |</font>
+        </div>
+    </div>
+</footer>
+</body>
+</html>

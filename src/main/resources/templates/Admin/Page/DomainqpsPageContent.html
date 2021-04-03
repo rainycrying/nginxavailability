@@ -2,10 +2,10 @@
 <html xmlns:th="http://www.thymeleaf.org" >
 <html lang="zh-CN">
 
-<script src="/static/js/jquery.min.js"></script>
-<link href="/static/css/bootstrap-datepicker3.css" rel="stylesheet">
-<script src="/static/js/bootstrap-datepicker.min.js"></script>
-<script src="/static/js/bootstrap-datepicker.zh-CN.min.js"></script>
+<script src="https://static.rainycrying.com/static/js/jquery.min.js"></script>
+<link href="https://static.rainycrying.com/static/css/bootstrap-datepicker3.css" rel="stylesheet">
+<script src="https://static.rainycrying.com/static/js/bootstrap-datepicker.min.js"></script>
+<script src="https://static.rainycrying.com/static/js/bootstrap-datepicker.zh-CN.min.js"></script>
 
 <!-- Begin Page Content -->
 <div class="container-fluid">
@@ -19,7 +19,8 @@
         <form name="DomainForm" th:action="@{/api/domain/history}" method="post">
             <input id="DomainNameinput" name="DomainName" list="DomainName"  th:value="${Domain_Name}"/> <input type="button" value="清空域名" onclick="document.getElementById('DomainNameinput').value=''"/>
             <datalist id="DomainName">
-                <option th:each="table_item:${DomainSearchTips}" th:value=" ${table_item.domain_name}"></option>
+                <!--/*@thymesVar id="table_item" type=""*/-->
+                <option th:each="table_item:${DomainSearchTips}" th:value="${table_item.domain_name}"></option>
             </datalist>查询粒度:
             <input name="TimeType" type="radio" value="From_Daytime" checked/>天
             <input name="TimeType" type="radio" value="From_Hours" checked/>小时
